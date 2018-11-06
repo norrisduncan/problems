@@ -1,0 +1,226 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/physics.dart';
+import 'package:flutter/widgets.dart';
+import 'dart:math' as math;
+
+void main() {
+  runApp(FlutterSingleChildScrollViewAbsorbsGesturesExample());
+}
+
+class FlutterSingleChildScrollViewAbsorbsGesturesExample extends StatefulWidget {
+  @override
+  State<FlutterSingleChildScrollViewAbsorbsGesturesExample> createState() =>
+      FlutterSingleChildScrollViewAbsorbsGesturesExampleState();
+}
+
+class FlutterSingleChildScrollViewAbsorbsGesturesExampleState
+    extends State<FlutterSingleChildScrollViewAbsorbsGesturesExample> {
+  Color colorOfRegularPhysicsBoxOne = Colors.black;
+  Color colorOfRegularPhysicsBoxTwo = Colors.black;
+  Color colorOfRegularPhysicsBoxThree = Colors.black;
+  Color colorOfRegularPhysicsBoxFour = Colors.black;
+  Color colorOfRegularPhysicsBoxFive = Colors.black;
+
+  Color colorOfCustomPhysicsBoxOne = Colors.black;
+  Color colorOfCustomPhysicsBoxTwo = Colors.black;
+  Color colorOfCustomPhysicsBoxThree = Colors.black;
+  Color colorOfCustomPhysicsBoxFour = Colors.black;
+  Color colorOfCustomPhysicsBoxFive = Colors.black;
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'An example of how the SingleChildScrollView with custom ScrollPhysics looks like it is eating gestures '
+          'meant for its descendants',
+      home: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: <Widget>[
+          SingleChildScrollView(
+            child: Container(
+              height: 1400.0,
+              width: 200.0,
+              color: Colors.lightBlue,
+              child: Center(
+                child: Column(
+                  children: <Widget>[
+                    GestureDetector(
+                      onTap: () => setState(() {
+                            colorOfRegularPhysicsBoxOne = Colors.white;
+                          }),
+                      child: Container(
+                        color: colorOfRegularPhysicsBoxOne,
+                        height: 100.0,
+                        width: 100.0,
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () => setState(() {
+                            colorOfRegularPhysicsBoxTwo = Colors.white;
+                          }),
+                      child: Container(
+                        color: colorOfRegularPhysicsBoxTwo,
+                        height: 100.0,
+                        width: 100.0,
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () => setState(() {
+                            colorOfRegularPhysicsBoxThree = Colors.white;
+                          }),
+                      child: Container(
+                        color: colorOfRegularPhysicsBoxThree,
+                        height: 100.0,
+                        width: 100.0,
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () => setState(() {
+                            colorOfRegularPhysicsBoxFour = Colors.white;
+                          }),
+                      child: Container(
+                        color: colorOfRegularPhysicsBoxFour,
+                        height: 100.0,
+                        width: 100.0,
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () => setState(() {
+                            colorOfRegularPhysicsBoxFive = Colors.white;
+                          }),
+                      child: Container(
+                        color: colorOfRegularPhysicsBoxFive,
+                        height: 100.0,
+                        width: 100.0,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          SingleChildScrollView(
+            physics: CustomSnappingScrollPhysicsForTheControlPanelHousing(stoppingPoints: [
+              0.0,
+              100.0,
+              200.0,
+              300.0,
+              400.0,
+            ]),
+            child: Container(
+              height: 1400.0,
+              width: 200.0,
+              color: Colors.amberAccent,
+              child: Center(
+                child: Column(
+                  children: <Widget>[
+                    GestureDetector(
+                      onTap: () => setState(() {
+                            colorOfCustomPhysicsBoxOne = Colors.white;
+                          }),
+                      child: Container(
+                        color: colorOfCustomPhysicsBoxOne,
+                        height: 100.0,
+                        width: 100.0,
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () => setState(() {
+                            colorOfCustomPhysicsBoxTwo = Colors.white;
+                          }),
+                      child: Container(
+                        color: colorOfCustomPhysicsBoxTwo,
+                        height: 100.0,
+                        width: 100.0,
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () => setState(() {
+                            colorOfCustomPhysicsBoxThree = Colors.white;
+                          }),
+                      child: Container(
+                        color: colorOfCustomPhysicsBoxThree,
+                        height: 100.0,
+                        width: 100.0,
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () => setState(() {
+                            colorOfCustomPhysicsBoxFour = Colors.white;
+                          }),
+                      child: Container(
+                        color: colorOfCustomPhysicsBoxFour,
+                        height: 100.0,
+                        width: 100.0,
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () => setState(() {
+                            colorOfCustomPhysicsBoxFive = Colors.white;
+                          }),
+                      child: Container(
+                        color: colorOfCustomPhysicsBoxFive,
+                        height: 100.0,
+                        width: 100.0,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class CustomSnappingScrollPhysicsForTheControlPanelHousing extends ScrollPhysics {
+  List<double> stoppingPoints;
+  SpringDescription springDescription = SpringDescription(mass: 100.0, damping: .2, stiffness: 50.0);
+
+  @override
+  CustomSnappingScrollPhysicsForTheControlPanelHousing({@required this.stoppingPoints, ScrollPhysics parent})
+      : super(parent: parent) {
+    stoppingPoints.sort();
+  }
+
+  @override
+  CustomSnappingScrollPhysicsForTheControlPanelHousing applyTo(ScrollPhysics ancestor) {
+    return new CustomSnappingScrollPhysicsForTheControlPanelHousing(
+        stoppingPoints: stoppingPoints, parent: buildParent(ancestor));
+  }
+
+  @override
+  Simulation createBallisticSimulation(ScrollMetrics scrollMetrics, double velocity) {
+    double targetStoppingPoint = _getTargetStoppingPointPixels(scrollMetrics.pixels, velocity, 0.0003, stoppingPoints);
+
+    return ScrollSpringSimulation(springDescription, scrollMetrics.pixels, targetStoppingPoint, velocity,
+        tolerance: Tolerance(velocity: .00003, distance: .003));
+  }
+
+  double _getTargetStoppingPointPixels(
+      double initialPosition, double velocity, double drag, List<double> stoppingPoints) {
+    double endPointBeforeSnappingIsCalculated =
+        initialPosition + (-velocity / math.log(drag)).clamp(stoppingPoints[0], stoppingPoints.last);
+    if (stoppingPoints.contains(endPointBeforeSnappingIsCalculated)) {
+      return endPointBeforeSnappingIsCalculated;
+    }
+    if (endPointBeforeSnappingIsCalculated > stoppingPoints.last) {
+      return stoppingPoints.last;
+    }
+    for (int i = 0; i < stoppingPoints.length; i++) {
+      if (endPointBeforeSnappingIsCalculated < stoppingPoints[i] &&
+          endPointBeforeSnappingIsCalculated < stoppingPoints[i] - (stoppingPoints[i] - stoppingPoints[i - 1]) / 2) {
+        double stoppingPoint = stoppingPoints[i - 1];
+        debugPrint(stoppingPoint.toString());
+        return stoppingPoint;
+      } else if (endPointBeforeSnappingIsCalculated < stoppingPoints[i] &&
+          endPointBeforeSnappingIsCalculated > stoppingPoints[i] - (stoppingPoints[i] - stoppingPoints[i - 1]) / 2) {
+        double stoppingPoint = stoppingPoints[i];
+        debugPrint(stoppingPoint.toString());
+        return stoppingPoint;
+      }
+    }
+    throw Error.safeToString('Failed finding a new scroll simulation endpoint for this scroll animation');
+  }
+}
