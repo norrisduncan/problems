@@ -80,7 +80,7 @@ class FlutterSingleChildScrollViewAbsorbsGesturesExampleState
                       child: Container(
                         color: colorOfRegularPhysicsBoxFour,
                         height: 100.0,
-                        width: 100.0, 
+                        width: 100.0,
                       ),
                     ),
                     GestureDetector(
@@ -99,7 +99,7 @@ class FlutterSingleChildScrollViewAbsorbsGesturesExampleState
             ),
           ),
           SingleChildScrollView(
-            physics: CustomSnappingScrollPhysicsForTheControlPanelHousing(stoppingPoints: [
+            physics: CustomSnappingScrollPhysicsForTheControlPanelHousing(STOPPING_POINTS: [
               0.0,
               100.0,
               200.0,
@@ -175,26 +175,26 @@ class FlutterSingleChildScrollViewAbsorbsGesturesExampleState
 }
 
 class CustomSnappingScrollPhysicsForTheControlPanelHousing extends ScrollPhysics {
-  List<double> stoppingPoints;
-  SpringDescription springDescription = SpringDescription(mass: 100.0, damping: .2, stiffness: 50.0);
+  final List<double> STOPPING_POINTS;
+  final SpringDescription SPRING_DESCRIPTION = SpringDescription(mass: 100.0, damping: .2, stiffness: 50.0);
 
   @override
-  CustomSnappingScrollPhysicsForTheControlPanelHousing({@required this.stoppingPoints, ScrollPhysics parent})
+  CustomSnappingScrollPhysicsForTheControlPanelHousing({@required this.STOPPING_POINTS, ScrollPhysics parent})
       : super(parent: parent) {
-    stoppingPoints.sort();
+    STOPPING_POINTS.sort();
   }
 
   @override
   CustomSnappingScrollPhysicsForTheControlPanelHousing applyTo(ScrollPhysics ancestor) {
     return new CustomSnappingScrollPhysicsForTheControlPanelHousing(
-        stoppingPoints: stoppingPoints, parent: buildParent(ancestor));
+        STOPPING_POINTS: STOPPING_POINTS, parent: buildParent(ancestor));
   }
 
   @override
   Simulation createBallisticSimulation(ScrollMetrics scrollMetrics, double velocity) {
-    double targetStoppingPoint = _getTargetStoppingPointPixels(scrollMetrics.pixels, velocity, 0.0003, stoppingPoints);
+    double targetStoppingPoint = _getTargetStoppingPointPixels(scrollMetrics.pixels, velocity, 0.0003, STOPPING_POINTS);
 
-    return ScrollSpringSimulation(springDescription, scrollMetrics.pixels, targetStoppingPoint, velocity,
+    return ScrollSpringSimulation(SPRING_DESCRIPTION, scrollMetrics.pixels, targetStoppingPoint, velocity,
         tolerance: Tolerance(velocity: .00003, distance: .003));
   }
 
