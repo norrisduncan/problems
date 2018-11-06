@@ -99,7 +99,7 @@ class FlutterSingleChildScrollViewAbsorbsGesturesExampleState
             ),
           ),
           SingleChildScrollView(
-            physics: CustomSnappingScrollPhysicsForTheControlPanelHousing(STOPPING_POINTS: [
+            physics: CustomSnappingScrollPhysicsForTheControlPanelHousing(stoppingPoints: [
               0.0,
               100.0,
               200.0,
@@ -175,26 +175,26 @@ class FlutterSingleChildScrollViewAbsorbsGesturesExampleState
 }
 
 class CustomSnappingScrollPhysicsForTheControlPanelHousing extends ScrollPhysics {
-  final List<double> STOPPING_POINTS;
-  final SpringDescription SPRING_DESCRIPTION = SpringDescription(mass: 100.0, damping: .2, stiffness: 50.0);
+  final List<double> stoppingPoints;
+  final SpringDescription springDescription = SpringDescription(mass: 100.0, damping: .2, stiffness: 50.0);
 
   @override
-  CustomSnappingScrollPhysicsForTheControlPanelHousing({@required this.STOPPING_POINTS, ScrollPhysics parent})
+  CustomSnappingScrollPhysicsForTheControlPanelHousing({@required this.stoppingPoints, ScrollPhysics parent})
       : super(parent: parent) {
-    STOPPING_POINTS.sort();
+    stoppingPoints.sort();
   }
 
   @override
   CustomSnappingScrollPhysicsForTheControlPanelHousing applyTo(ScrollPhysics ancestor) {
     return new CustomSnappingScrollPhysicsForTheControlPanelHousing(
-        STOPPING_POINTS: STOPPING_POINTS, parent: buildParent(ancestor));
+        stoppingPoints: stoppingPoints, parent: buildParent(ancestor));
   }
 
   @override
   Simulation createBallisticSimulation(ScrollMetrics scrollMetrics, double velocity) {
-    double targetStoppingPoint = _getTargetStoppingPointPixels(scrollMetrics.pixels, velocity, 0.0003, STOPPING_POINTS);
+    double targetStoppingPoint = _getTargetStoppingPointPixels(scrollMetrics.pixels, velocity, 0.0003, stoppingPoints);
 
-    return ScrollSpringSimulation(SPRING_DESCRIPTION, scrollMetrics.pixels, targetStoppingPoint, velocity,
+    return ScrollSpringSimulation(springDescription, scrollMetrics.pixels, targetStoppingPoint, velocity,
         tolerance: Tolerance(velocity: .00003, distance: .003));
   }
 
