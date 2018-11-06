@@ -80,7 +80,7 @@ class FlutterSingleChildScrollViewAbsorbsGesturesExampleState
                       child: Container(
                         color: colorOfRegularPhysicsBoxFour,
                         height: 100.0,
-                        width: 100.0,
+                        width: 100.0, 
                       ),
                     ),
                     GestureDetector(
